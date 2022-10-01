@@ -3,6 +3,8 @@ import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import './map.css';
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
+import { useSelector} from 'react-redux';
+
 
 export default function Map(props) {
   const mapContainerRef = useRef();
@@ -11,15 +13,17 @@ export default function Map(props) {
   const [lat] = useState(props.lat || 39.742043);
   const [style] = useState('https://devtileserver2.concept3d.com/styles/c3d_default_style/style.json');
   const [zoom] = useState(14);
-  
+  const locations = useSelector((state) => state.locations)
+
   useEffect(() => {
     if (map.current) return;
     map.current = new maplibregl.Map({
       container: mapContainerRef.current,
       style,
       center: [lng, lat],
-      zoom
+      zoom, 
     });
+
     const draw = new MapboxDraw({
       displayControlsDefault: false,
       controls: {
@@ -34,18 +38,21 @@ export default function Map(props) {
     map.current.on('draw.create', newDraw);
     map.current.on('draw.delete', newDraw);
     map.current.on('draw.update', newDraw);
+    
 
     function newDraw(e) {
       const data = draw.getAll();
       console.log("data:", data);
     }
-  
+
     return () => {
       map.current.remove();
     }
   }, []);
 
-
+  if (locations.length !== 0) {
+    const markers = locations.map((location) => new maplibregl.Marker().setLngLat([location.lng, location.lat]).addTo(map.current))
+  }
 
   return (
       <div className="map-wrap">

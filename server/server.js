@@ -2,7 +2,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const app = express();
+const cors = require('cors')
 
+app.use(cors())
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -29,6 +31,29 @@ const initialLocations = [
 
 app.locals.idIndex = 3;
 app.locals.locations = initialLocations;
+
+app.get('/:name/:lat/:lng', (req, res) =>  {
+  const { name, lat, lng } = req.params
+  if (name === ""){
+    res.status(200).json({
+      status: "name invalid"
+    })
+  } else if (Math.abs(lat) > 90) {
+    res.status(200).json({
+      status: "lat invalid"
+    })
+  } else if (Math.abs(lng) > 180) {
+    res.status(200).json({
+      status: "lng invalid"
+    })
+  } else {
+    res.status(200).json({
+      status: "success"
+    })
+  }
+
+
+})
 
 app.get('/locations', (req, res) => res.send({ locations: app.locals.locations }));
 
