@@ -21,7 +21,6 @@ export default function Navbar(){
       headers: {
         'Content-Type': 'application/json'
       }
-
     }
     fetch(`http://localhost:3001/new_polygon`, fetchOptions)
       .then((response) => {
@@ -30,6 +29,10 @@ export default function Navbar(){
           } else {
           throw response.status;
           }
+      })
+      dispatch({
+        type:'UPDATE_POLYGON_COORDINATES',
+        payload: ""
       })
   }
 

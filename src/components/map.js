@@ -13,6 +13,7 @@ export default function Map() {
   const [style] = useState('https://devtileserver2.concept3d.com/styles/c3d_default_style/style.json');
   const [zoom] = useState(14);
   const locations = useSelector((state) => state.locations)
+  const polygons = useSelector((state) => state.polygons)
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -37,6 +38,21 @@ export default function Map() {
     map.current.on('draw.create', newDraw);
     map.current.on('draw.delete', newDraw);
     map.current.on('draw.update', newDraw);
+    map.current.on('style.load', () => {
+      polygons.forEach((polygon, index) => { 
+        map.current.addSource(index, polygon)
+        map.current.addLayer({
+          'id': index.toString(),
+          'type': 'fill',
+          'source': index.toString(),
+          'layout': {},
+          'paint': {
+            'fill-color': '#088',
+            'fill-opacity': 0.8
+          }
+        });
+      })
+    });
 
     function newDraw(e) {
       const data = draw.getAll();
@@ -53,7 +69,7 @@ export default function Map() {
     return () => {
       map.current.remove();
     }
-  }, [lat, lng, style, zoom, locations]);
+  }, [lat, lng, style, zoom, locations, polygons]);
 
   
 

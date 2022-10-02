@@ -23,10 +23,15 @@ app.get('/locations', (req, res) => res.send({ locations: initialLocations}));
 app.get('/polygons', (req, res) => res.send({polygons: initialPolygons}));
 
 app.post('/new_polygon', (req, res) => {
-  const newId = nanoid()
   const newPolygon = Object.assign({
-    id: newId,
-    coordinates: req.body
+    type: 'geojson',
+    data: {
+      type: 'Feature',
+      geometry: {
+        type: 'Polygon',
+        coordinates: [req.body]
+      }
+    }
   });
     
   initialPolygons.push(newPolygon);

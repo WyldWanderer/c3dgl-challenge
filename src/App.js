@@ -25,6 +25,21 @@ function App() {
           payload: data.locations
         })
       })
+
+      fetch("http://localhost:3001/polygons")
+      .then((response) => {
+        if(response.ok) {
+          return response.json()
+        } else {
+          throw response.status;
+        }
+      })
+      .then((data) => {
+        dispatch({
+          type: 'GET_POLYGONS',
+          payload: data.polygons
+        })
+      })
   }, []);
 
   return (

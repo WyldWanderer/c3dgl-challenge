@@ -17,6 +17,12 @@ export default function appReducer(state = initialState, action) {
         locations: action.payload
       }
     }
+    case 'GET_POLYGONS': {
+      return {
+        ...state,
+        polygons: action.payload
+      }
+    }
     case 'ADD_LOCATION': {
       console.log("location added")
       return {
