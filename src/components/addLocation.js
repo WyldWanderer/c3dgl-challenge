@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { nanoid } from 'nanoid'
 
 export function AddLocation() {
-    const [locName, setName] = useState(" ")
+    const [locName, setName] = useState("")
     const [newLat, setLat] = useState()
     const [newLng, setLng] = useState()
     const [validLat, checkLat] = useState(true)
@@ -29,12 +28,18 @@ export function AddLocation() {
                 })
                 .then((data) => {
                     if (data.status === "success") {
-                        let id = nanoid()
                         dispatch({
                             type: 'ADD_LOCATION',
                             payload: {
-                                id,
+                                id: data.id,
                                 name: locName,
+                                lat: newLat,
+                                lng: newLng
+                            }
+                        })
+                        dispatch({
+                            type: 'UPDATE_VIEW',
+                            payload: {
                                 lat: newLat,
                                 lng: newLng
                             }
@@ -44,7 +49,6 @@ export function AddLocation() {
                     } else if (data.status === "lng invalid") {
                         checkLng(false)
                     }
-        
                 })
         }
     }

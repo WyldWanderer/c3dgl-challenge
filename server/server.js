@@ -3,34 +3,44 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const app = express();
 const cors = require('cors')
+const fs = require('fs')
+const { nanoid } = require('nanoid')
 
 app.use(cors())
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const initialLocations = [
-  {
-    id: 'id1',
-    name: 'Denver',
-    lat: 39.742043,
-    lng: -104.991531,
-  },
-  {
-    id: 'id2',
-    name: 'LA',
-    lat: 34.052235,
-    lng: -118.243683,
-  },
-  {
-    id: 'id3',
-    name: 'Boston',
-    lat: 42.364506,
-    lng: -71.038887,
-  },
-];
+const initialLocations = JSON.parse(
+  fs.readFileSync(`${__dirname}/data.json`)
+)
 
-app.locals.idIndex = 3;
-app.locals.locations = initialLocations;
+const initialPolygons = JSON.parse(
+  fs.readFileSync(`${__dirname}/polygons.json`)
+)
+
+app.get('/locations', (req, res) => res.send({ locations: initialLocations}));
+
+app.get('/polygons', (req, res) => res.send({polygons: initialPolygons}));
+
+app.post('/new_polygon', (req, res) => {
+  const newId = nanoid()
+  const newPolygon = Object.assign({
+    id: newId,
+    coordinates: req.body
+  });
+    
+  initialPolygons.push(newPolygon);
+
+  fs.writeFile(
+    `${__dirname}/polygons.json`,
+    JSON.stringify(initialPolygons),
+    err => {
+      res.status(200).json({
+        status: "success",
+      })
+    }
+  )
+});
 
 app.get('/:name/:lat/:lng', (req, res) =>  {
   const { name, lat, lng } = req.params
@@ -47,15 +57,28 @@ app.get('/:name/:lat/:lng', (req, res) =>  {
       status: "lng invalid"
     })
   } else {
-    res.status(200).json({
-      status: "success"
-    })
+    const newId = nanoid()
+    const newLocation = Object.assign({
+      id: newId,
+      name: name,
+      lat: lat,
+      lng: lng
+    });
+
+    initialLocations.push(newLocation);
+
+    fs.writeFile(
+      `${__dirname}/data.json`,
+      JSON.stringify(initialLocations),
+      err => {
+        res.status(200).json({
+          status: "success",
+          id: newId
+        })
+      }
+    )
   }
-
-
-})
-
-app.get('/locations', (req, res) => res.send({ locations: app.locals.locations }));
+});
 
 app.use(express.static(path.resolve(__dirname, '..', 'build')));
 

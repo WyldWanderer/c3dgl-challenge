@@ -31,7 +31,7 @@ function App() {
     <div className="App">
       <Navbar/>
       {formStatus ? <AddLocation /> : null}
-      <Map locations={useSelector((state) => state)} />
+      <Map />
     </div>
   );
 }

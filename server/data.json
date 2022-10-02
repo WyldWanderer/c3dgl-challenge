@@ -1,0 +1,32 @@
+[
+  {
+    "id": "id1",
+    "name": "Denver",
+    "lat": 39.742043,
+    "lng": -104.991531
+  },
+  {
+    "id": "id2",
+    "name": "LA",
+    "lat": 34.052235,
+    "lng": -118.243683
+  },
+  {
+    "id": "id3",
+    "name": "Boston",
+    "lat": 42.364506,
+    "lng": -71.038887
+  },
+  {
+    "id": "FQRdzxt8ey6lefYPAtRvx",
+    "name": "test",
+    "lat": "40",
+    "lng": "100"
+  },
+  {
+    "id": "lLkyVV3BWnDCPsH4et5kR",
+    "name": "test",
+    "lat": "40",
+    "lng": "100"
+  }
+]

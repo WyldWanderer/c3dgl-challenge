@@ -31,6 +31,19 @@ export default function appReducer(state = initialState, action) {
         openForm: action.payload
       }
     }
+    case 'UPDATE_VIEW': {
+      return {
+        ...state,
+        mapViewLat: action.payload.lat,
+        mapViewLng: action.payload.lng
+      }
+    }
+    case 'UPDATE_POLYGON_COORDINATES': {
+      return {
+        ...state,
+        polygonCoordsToSave: action.payload
+      }
+    }
     default:
       // If this reducer doesn't recognize the action type, or doesn't
       // care about this specific action, return the existing state unchanged
